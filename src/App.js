@@ -1,42 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ContactList from './components/ContactList';
-import './App.css'; 
+import { addContact, getAllContacts, updateContact, deleteContact } from './indexedDB'; // Import IndexedDB functions
 
 const App = () => {
-  const [contacts, setContacts] = useState([
-    { id: 1, name: 'John Burges', phone: '+13423523' },
-    { id: 2, name: 'Yogesh', phone: '+1989234567' },
-    // ... more contacts
-  ]);
+  const [contacts, setContacts] = useState([]);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [newContact, setNewContact] = useState({ name: '', phone: '' });
   const [editedContact, setEditedContact] = useState({ id: null, name: '', phone: '' });
 
-  const handleDelete = (id) => {
-    const updatedContacts = contacts.filter(contact => contact.id !== id);
-    setContacts(updatedContacts);
-  };
-
-  const toggleNav = () => {
-    setIsNavOpen(!isNavOpen);
-  };
-
-  const toggleForm = () => {
-    setIsFormOpen(!isFormOpen);
-  };
+  useEffect(() => {
+    // Load contacts from IndexedDB when the component mounts
+    getAllContacts().then((storedContacts) => {
+      setContacts(storedContacts);
+    });
+  }, []);
 
   const handleAdd = () => {
     if (newContact.name && newContact.phone) {
-      const updatedContacts = [...contacts];
-      updatedContacts.push({
-        id: Math.random(), 
-        name: newContact.name,
-        phone: newContact.phone,
-      });
-      setContacts(updatedContacts);
-      setNewContact({ name: '', phone: '' });
-      toggleForm();
+      addContact(newContact)
+        .then(() => {
+          setContacts([...contacts, newContact]);
+          setNewContact({ name: '', phone: '' });
+          setIsFormOpen(false); // Close the form after adding a contact
+        })
+        .catch((error) => {
+          console.error('Error adding contact to IndexedDB:', error);
+        });
     } else {
       alert('Please fill out both name and phone number.');
     }
@@ -44,22 +34,45 @@ const App = () => {
 
   const handleEdit = () => {
     if (editedContact.name && editedContact.phone) {
-      const updatedContacts = contacts.map(contact =>
-        contact.id === editedContact.id ? editedContact : contact
-      );
-      setContacts(updatedContacts);
-      setEditedContact({ id: null, name: '', phone: '' });
+      updateContact(editedContact)
+        .then(() => {
+          const updatedContacts = contacts.map((contact) =>
+            contact.id === editedContact.id ? editedContact : contact
+          );
+          setContacts(updatedContacts);
+          setEditedContact({ id: null, name: '', phone: '' });
+        })
+        .catch((error) => {
+          console.error('Error updating contact in IndexedDB:', error);
+        });
     } else {
       alert('Please fill out both name and phone number.');
     }
   };
 
+  const handleDelete = (id) => {
+    deleteContact(id)
+      .then(() => {
+        const updatedContacts = contacts.filter((contact) => contact.id !== id);
+        setContacts(updatedContacts);
+      })
+      .catch((error) => {
+        console.error('Error deleting contact from IndexedDB:', error);
+      });
+  };
+
+  const toggleNav = () => {
+    setIsNavOpen(!isNavOpen); // Toggle the isNavOpen state
+  };
+
+  const toggleForm = () => {
+    setIsFormOpen(!isFormOpen);
+  };
+
   return (
     <div className="App">
       <nav className={`sidenav ${isNavOpen ? 'open' : ''}`}>
-        <button onClick={toggleNav} className="closebtn">&times;</button>
-        <a href="#">Home</a>
-        <a href="#">Contacts</a>
+        {/* Your navigation content */}
       </nav>
 
       <button onClick={toggleNav} className="sidenav-trigger">
@@ -78,7 +91,7 @@ const App = () => {
 
         {isFormOpen && (
           <div className="contact-form">
-            <h2>Add Contact</h2>
+            {/* Your form for adding a contact */}
             <input
               type="text"
               placeholder="Name"
@@ -100,6 +113,11 @@ const App = () => {
 };
 
 export default App;
+
+
+
+
+
 
 
 
