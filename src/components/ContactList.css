@@ -1,9 +1,24 @@
-.contact-list {
+body {
     background-color: #e0f2f1;
+    /* Your background color */
+    margin: 0;
+    /* Remove default margin */
+    min-height: 100vh;
+    /* Ensure the body takes the full viewport height */
+}
+
+.contact-list {
     padding: 20px;
     border-radius: 8px;
     max-width: 600px;
     margin: auto;
+    margin-bottom: 40px;
+    /* Add some space at the bottom */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: transparent;
+    /* Remove background color from contact list */
 }
 
 .contact-item {
@@ -15,6 +30,7 @@
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     padding: 10px;
+    width: 100%;
 }
 
 .contact-info {
@@ -46,7 +62,12 @@
 }
 
 .add-btn {
-    position: fixed;
-    right: 25px;
-    bottom: 25px;
+    width: max-content;
+    padding: 10px 20px;
+    margin: 20px auto 0;
+    background-color: #4db6ac;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }

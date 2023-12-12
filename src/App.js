@@ -19,6 +19,13 @@ const App = () => {
     setIsNavOpen(!isNavOpen);
   };
 
+  const handleAdd = () => {
+    // Implement your add functionality here
+    // You can open a form or any other method to add contacts
+    // For now, let's just show an alert
+    alert('Add functionality not implemented.');
+  };
+
   return (
     <div className="App">
       <nav className={`sidenav ${isNavOpen ? 'open' : ''}`}>
@@ -33,7 +40,7 @@ const App = () => {
       </button>
 
       <div className="main-content">
-        <ContactList contacts={contacts} onDelete={handleDelete} />
+        <ContactList contacts={contacts} onDelete={handleDelete} onAdd={handleAdd} />
       </div>
     </div>
   );

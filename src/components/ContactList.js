@@ -1,7 +1,7 @@
 import React from 'react';
 import './ContactList.css'; // Assuming you have a ContactList.css in the same folder
 
-const ContactList = ({ contacts, onDelete }) => {
+const ContactList = ({ contacts, onDelete, onAdd }) => {
   return (
     <div className="contact-list">
       {contacts.map((contact) => (
@@ -19,11 +19,14 @@ const ContactList = ({ contacts, onDelete }) => {
           </div>
         </div>
       ))}
-      <button className="btn-floating btn-large red add-btn" onClick={() => alert('Add functionality not implemented.')}>
-        <i className="large material-icons">add</i>
-      </button>
+      <div className="add-btn-container">
+        <button className="btn-floating btn-large red add-btn" onClick={onAdd}>
+          <i className="large material-icons">add</i>
+        </button>
+      </div>
     </div>
   );
 };
 
 export default ContactList;
+
