@@ -1,7 +1,7 @@
 {
     "name": "PWAContactsApp",
     "short_name": "PWAContact",
-    "start_url": "/index.html",
+    "start_url": "/",
     "display": "standalone",
     "background_color": "#4db6ac",
     "theme_color": "#00695c",
