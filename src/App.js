@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ContactList from './components/ContactList';
-import './App.css'; // Make sure to include your styles
+import './App.css'; 
 
 const App = () => {
   const [contacts, setContacts] = useState([
@@ -9,6 +9,9 @@ const App = () => {
     // ... more contacts
   ]);
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [newContact, setNewContact] = useState({ name: '', phone: '' });
+  const [editedContact, setEditedContact] = useState({ id: null, name: '', phone: '' });
 
   const handleDelete = (id) => {
     const updatedContacts = contacts.filter(contact => contact.id !== id);
@@ -19,11 +22,36 @@ const App = () => {
     setIsNavOpen(!isNavOpen);
   };
 
+  const toggleForm = () => {
+    setIsFormOpen(!isFormOpen);
+  };
+
   const handleAdd = () => {
-    // Implement your add functionality here
-    // You can open a form or any other method to add contacts
-    // For now, let's just show an alert
-    alert('Add functionality not implemented.');
+    if (newContact.name && newContact.phone) {
+      const updatedContacts = [...contacts];
+      updatedContacts.push({
+        id: Math.random(), 
+        name: newContact.name,
+        phone: newContact.phone,
+      });
+      setContacts(updatedContacts);
+      setNewContact({ name: '', phone: '' });
+      toggleForm();
+    } else {
+      alert('Please fill out both name and phone number.');
+    }
+  };
+
+  const handleEdit = () => {
+    if (editedContact.name && editedContact.phone) {
+      const updatedContacts = contacts.map(contact =>
+        contact.id === editedContact.id ? editedContact : contact
+      );
+      setContacts(updatedContacts);
+      setEditedContact({ id: null, name: '', phone: '' });
+    } else {
+      alert('Please fill out both name and phone number.');
+    }
   };
 
   return (
@@ -32,7 +60,6 @@ const App = () => {
         <button onClick={toggleNav} className="closebtn">&times;</button>
         <a href="#">Home</a>
         <a href="#">Contacts</a>
-        {/* ... other navigation links */}
       </nav>
 
       <button onClick={toggleNav} className="sidenav-trigger">
@@ -40,13 +67,41 @@ const App = () => {
       </button>
 
       <div className="main-content">
-        <ContactList contacts={contacts} onDelete={handleDelete} onAdd={handleAdd} />
+        <ContactList
+          contacts={contacts}
+          onDelete={handleDelete}
+          onAdd={toggleForm}
+          onEdit={handleEdit}
+          editedContact={editedContact}
+          setEditedContact={setEditedContact}
+        />
+
+        {isFormOpen && (
+          <div className="contact-form">
+            <h2>Add Contact</h2>
+            <input
+              type="text"
+              placeholder="Name"
+              value={newContact.name}
+              onChange={(e) => setNewContact({ ...newContact, name: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Phone"
+              value={newContact.phone}
+              onChange={(e) => setNewContact({ ...newContact, phone: e.target.value })}
+            />
+            <button onClick={handleAdd}>Add</button>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default App;
+
+
 
 
 
